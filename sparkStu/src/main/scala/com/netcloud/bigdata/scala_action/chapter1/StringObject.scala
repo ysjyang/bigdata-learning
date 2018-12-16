@@ -6,7 +6,7 @@ import scala.util.matching.Regex
   * 字符串的处理
   *
   * @author yangshaojun
-  *         2018/12/15 9:33
+  * Date 2018/12/15 9:33
   * @version 1.0
   */
 object StringObject {
