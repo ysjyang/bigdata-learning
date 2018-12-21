@@ -147,6 +147,27 @@ object ConditionObject {
     val out2 = fruits.map(e => e.capitalize)//fruits.map(_.capitalize)
 
 
+    /**
+      * 实现 break 和continue功能
+      * 1)scala中没有 break 和continue的关键字  但是需要导入 scala.util.control.Breaks
+      * 2) 不使用 break和continue 使用boolean测试同样能够跳出for循环
+      */
+    import util.control.Breaks._
+    //break的实现
+    breakable {
+      for (i <- 1 to 10) {
+        if (i > 5) break
+        println(i)
+        println("======break end !======")
+      }
+    }
+    // continue对的实现
+    for (i <- 10 to 15) {
+      breakable {
+        if (i == 12) break
+        println(i)
+      }
+    }
 
 
   }
