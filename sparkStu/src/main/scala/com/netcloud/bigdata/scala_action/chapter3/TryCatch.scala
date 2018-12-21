@@ -12,23 +12,23 @@ package com.netcloud.bigdata.scala_action.chapter3
 object TryCatch {
   def main(args: Array[String]): Unit = {
 
-     val s="Foo"
-    try {
-      val i=s.toInt
-    }catch {
-      case e:Exception => e.printStackTrace
-      case e:IndexOutOfBoundsException => println("数组越界异常！")
-    }
+  val s = "Foo"
+  try {
+    val i = s.toInt
+  } catch {
+    case e: Exception => e.printStackTrace
+    case e: IndexOutOfBoundsException => println("数组越界异常！")
+  }
 
-    //如果声明方法抛出的异常 在定义方法的时候添加@throws
-    @throws(classOf[NumberFormatException])
-    def toInt(s:String) :Int={
-      try{
-        s.toInt
-      }catch {
-        case e:NumberFormatException => throw e
-      }
+  //如果声明方法抛出的异常 在定义方法的时候添加@throws
+  @throws(classOf[NumberFormatException])
+  def toInt(s: String): Int = {
+    try {
+      s.toInt
+    } catch {
+      case e: NumberFormatException => throw e
     }
   }
+}
 
 }
