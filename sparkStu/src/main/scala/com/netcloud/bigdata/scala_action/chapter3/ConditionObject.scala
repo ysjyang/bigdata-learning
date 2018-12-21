@@ -169,6 +169,12 @@ object ConditionObject {
       }
     }
 
+    /**
+      * scala中的if表达式 等同于java的三元运算符
+      */
+     val max=if(3>2) true else false
+     println(max)
+
 
   }
 
