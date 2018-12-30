@@ -2,6 +2,7 @@ package com.netcloud.bigdata.scala_action.chapter4
 
 /**
   * 字段私有化 阻止生成setter和getter方法
+  * 将代码块和函数赋值给字段
   * @author yangshaojun
   * 2018/12/28 22:07
   * @version 1.0
