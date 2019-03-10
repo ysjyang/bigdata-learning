@@ -5,6 +5,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.VoidFunction;
 import scala.Tuple2;
 
@@ -18,23 +19,33 @@ import java.util.List;
  * filter：过滤出集合中的所有的偶数
  * flatMap:将文本行拆分多个单词
  * groupByKey：将班级的成绩分组
+ * reduceByKey:统计每个班级的总分数
+ * sortByKey：将学生分数进行排序 默认是true 升序排序
+ * join:打印每个学生的成绩
+ * cogroup:打印每个学生的成绩
+ *
  * @author yangshaojun
  * #date  2019/3/9 17:10
  * @version 1.0
  */
 public class TransFormationPractice {
     public static void main(String[] args) {
-        SparkConf conf = new SparkConf().setAppName("wordCount").setMaster("local[2]");
+        SparkConf conf = new SparkConf().setAppName("TransFormationPractice").setMaster("local[2]");
         JavaSparkContext sc = new JavaSparkContext(conf);
         //map(sc);
         //filter(sc);
-        groupByKey(sc);
+        //groupByKey(sc);
+        //reduceByKey(sc);
+        //sortByKey(sc);
+        //join(sc);
+        cogroup(sc);
         sc.stop();
 
     }
 
     /**
      * Map算子的使用
+     *
      * @param sc
      */
     private static void map(JavaSparkContext sc) {
@@ -98,7 +109,7 @@ public class TransFormationPractice {
      * flatMap：将文本行拆分多个单词
      */
     private static void flatMap(JavaSparkContext sc) {
-        List<String> numbers = Arrays.asList("hello you","hello me","hello world");
+        List<String> numbers = Arrays.asList("hello you", "hello me", "hello world");
         JavaRDD<String> numbersRDD = sc.parallelize(numbers);
         /**
          * flatMap算子 在java中接收的参数是 FlatMapFunction
@@ -147,4 +158,143 @@ public class TransFormationPractice {
         );
 
     }
+
+    /**
+     * reduceByKey:统计每个班级的总分数
+     *
+     * @param sc
+     */
+    public static void reduceByKey(JavaSparkContext sc) {
+        List<Tuple2<String, Integer>> scoresList = Arrays.asList(new Tuple2<String, Integer>("class1", 80),
+                new Tuple2<String, Integer>("class2", 87),
+                new Tuple2<String, Integer>("class2", 90),
+                new Tuple2<String, Integer>("class1", 65));
+        //并行化集合，创建JavaPairRDD 每个元素是tuple2
+        JavaPairRDD<String, Integer> scores = sc.parallelizePairs(scoresList);
+        /**
+         * reduceByKey接收的参数是Function2类型，它有3个泛型参数，前两个泛型参数类型代表原始的RDD value的类型
+         * 因此 ,对每个key 进行reduce 都会依次将第一个、第二个value传入 然后将得到的值载与第三个value传入
+         * 因此此处, 会自动的定义两个泛型类型 代表call()方法的两个传入的参数的类型
+         * 第三个泛型类型，代表了每次reduce操作返回的值类型，默认也是与原始的RDD的value类型相同的。
+         * reduceByKey算的返回的RDD 还是JavaPairRDD<Key,value>
+         */
+
+        JavaPairRDD<String, Integer> reduceRDD = scores.reduceByKey(new Function2<Integer, Integer, Integer>() {
+            @Override
+            public Integer call(Integer v1, Integer v2) throws Exception {
+                return v1 + v2;
+            }
+        });
+        reduceRDD.foreach(new VoidFunction<Tuple2<String, Integer>>() {
+            @Override
+            public void call(Tuple2<String, Integer> t1) throws Exception {
+                System.out.println("class:" + t1._1 + " " + "totalscore:" + t1._2);
+            }
+        });
+
+
+    }
+
+    /**
+     * sortByKey:根据分数进行排序
+     *
+     * @param sc
+     */
+    public static void sortByKey(JavaSparkContext sc) {
+        List<Tuple2<Integer, String>> scoresList =
+                Arrays.asList(
+                        new Tuple2<Integer, String>(65, "leo"),
+                        new Tuple2<Integer, String>(50, "leo1"),
+                        new Tuple2<Integer, String>(100, "leo2")
+
+                );
+        JavaPairRDD<Integer, String> scoreRDD = sc.parallelizePairs(scoresList, 1);
+        /**
+         * Java中的sortByKey方法中接收的参数是 boolean 默认是true 升序排序
+         */
+        JavaPairRDD<Integer, String> retRDD = scoreRDD.sortByKey();
+        retRDD.foreach(new VoidFunction<Tuple2<Integer, String>>() {
+            @Override
+            public void call(Tuple2<Integer, String> t1) throws Exception {
+                System.out.println(t1._1 + ":" + t1._2);
+            }
+        });
+
+    }
+
+    /**
+     * join:打印每个学生的成绩
+     *
+     * @param sc
+     */
+    public static void join(JavaSparkContext sc) {
+
+        List<Tuple2<Integer, String>> students = Arrays.asList(
+                new Tuple2<>(1, "tom"),
+                new Tuple2<>(2, "jack"),
+                new Tuple2<>(3, "marry"),
+                new Tuple2<>(4, "ff"));
+        List<Tuple2<Integer, Integer>> scores = Arrays.asList(
+                new Tuple2<>(1, 80),
+                new Tuple2<>(2, 90),
+                new Tuple2<>(3, 100),
+                new Tuple2<>(4, 60));
+        JavaPairRDD<Integer, String> studentRDD = sc.parallelizePairs(students);
+        JavaPairRDD<Integer, Integer> scoreRDD = sc.parallelizePairs(scores);
+        JavaPairRDD<Integer, Tuple2<String, Integer>> retRDD = studentRDD.join(scoreRDD);
+        /**
+         *使用 join算子 关联两个RDD 是等值连接
+         * join以后 是根据key进行join的，并且返回JavapairRDD
+         * JavaPairRDD的第一个泛型是之前两个RDD的key类型 第二个泛型类型是Tuple2<v1,v2>类型
+         * Tuple2的两个泛型分别是原始RDD的value类型
+         *  比如 （1,1） （1,2） （1,3）的RDD
+         * 还有一个 （1,4） （2,1） （2,2）
+         *  join以后 实际上得到 （1，（1,4）） （1（2,4）） （1，,3,4））
+         */
+        retRDD.foreach(new VoidFunction<Tuple2<Integer, Tuple2<String, Integer>>>() {
+            @Override
+            public void call(Tuple2<Integer, Tuple2<String, Integer>> t1) throws Exception {
+                System.out.println(t1);
+            }
+        });
+    }
+
+    /**
+     * cogroup:打印每个学生的成绩
+     *
+     * @param sc
+     */
+    public static void cogroup(JavaSparkContext sc) {
+
+        List<Tuple2<Integer, String>> students = Arrays.asList(
+                new Tuple2<>(1, "tom"),
+                new Tuple2<>(2, "jack"),
+                new Tuple2<>(3, "marry"),
+                new Tuple2<>(4, "ff"));
+        List<Tuple2<Integer, Integer>> scores = Arrays.asList(
+                new Tuple2<>(1, 80),
+                new Tuple2<>(2, 90),
+                new Tuple2<>(3, 100),
+                new Tuple2<>(1, 60),
+                new Tuple2<>(2, 80));
+        JavaPairRDD<Integer, String> studentRDD = sc.parallelizePairs(students);
+        JavaPairRDD<Integer, Integer> scoreRDD = sc.parallelizePairs(scores);
+        JavaPairRDD<Integer, Tuple2<Iterable<String>, Iterable<Integer>>> retRDD = studentRDD.cogroup(scoreRDD);
+        /**
+         *cogroup和join不同
+         * 相当于 一个 key join上所有的value 都放到一个Iterable里面去了
+         * cogroup不太好讲解 须有动手编写案例仔细体会。
+         */
+        retRDD.foreach(new VoidFunction<Tuple2<Integer, Tuple2<Iterable<String>, Iterable<Integer>>>>() {
+            @Override
+            public void call(Tuple2<Integer, Tuple2<Iterable<String>, Iterable<Integer>>> t1) throws Exception {
+                System.out.println(t1);
+
+            }
+        });
+        /**
+         * (1,([tom],[80, 60]))
+         */
+    }
+
 }
