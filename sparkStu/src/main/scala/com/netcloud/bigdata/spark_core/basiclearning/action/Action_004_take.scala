@@ -6,6 +6,6 @@ package com.netcloud.bigdata.spark_core.basiclearning.action
   * #date  2019/3/3 11:39
   * @version 1.0
   */
-class Action_004_take {
+object Action_004_take {
 
 }
