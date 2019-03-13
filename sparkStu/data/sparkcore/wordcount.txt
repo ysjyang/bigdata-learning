@@ -1,0 +1,2 @@
+spark,hadoop,hdfs,hive,sqoop,hive
+spark,mr,kafka,test,spark
