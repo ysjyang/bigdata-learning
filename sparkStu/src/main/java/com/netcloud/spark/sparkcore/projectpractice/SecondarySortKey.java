@@ -8,7 +8,6 @@ import java.util.Objects;
 /**
  * 自定义的二次排序Key
  * 1）实现Ordered 、Serializable接口
- *
  * @author yangshaojun
  * #date  2019/3/14 20:54
  * @version 1.0
