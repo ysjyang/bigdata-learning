@@ -9,6 +9,7 @@ import org.apache.spark.sql.SparkSession
 /**
   * 独热编码
   * 将类别索引列映射到二进制向量列。此编码允许期望连续特征（例如Logistic回归）的算法使用分类特征。
+  * 类别的索引从o开始,索引的排序顺序是根据类别出现频率决定。
   */
 object OneHotEncoderExample {
   def main(args: Array[String]): Unit = {
@@ -48,7 +49,7 @@ object OneHotEncoderExample {
       .setInputCol("categoryIndex")
       .setOutputCol("categoryVec")
     // 设置最后一个是否包含
-    //      .setDropLast(false)
+          .setDropLast(false)
 
     val encoded = encoder.transform(indexed)
     encoded.show()
