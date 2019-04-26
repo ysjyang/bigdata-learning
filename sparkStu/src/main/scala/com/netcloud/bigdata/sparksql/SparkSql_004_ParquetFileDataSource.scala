@@ -3,11 +3,12 @@ package com.netcloud.bigdata.sparksql
 import org.apache.spark.sql.SparkSession
 
 /**
+  * 加载Parquet文件 创建DataFrame
   * @author yangshaojun
   *  #date  2019/4/8 12:23
   * @version 1.0
   */
-object SparkSql_004_ParquetFile {
+object SparkSql_004_ParquetFileDataSource {
   def main(args: Array[String]): Unit = {
     val  spark=SparkSession
       .builder()
