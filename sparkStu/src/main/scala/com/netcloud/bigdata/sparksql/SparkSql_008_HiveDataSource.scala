@@ -9,11 +9,11 @@ import org.apache.spark.sql.hive.HiveContext
   * #date  2019/4/8 15:01
   * @version 1.0
   */
-object SparkSql_007_HiveDataSource {
+object SparkSql_008_HiveDataSource {
   def main(args: Array[String]): Unit = {
     val  spark=SparkSession
       .builder()
-      .appName("SparkSql_007_HiveDataSource")
+      .appName("SparkSql_008_HiveDataSource")
       .getOrCreate()
     // 通过sparkContext 创建 HiveContext对象
     val hiveContext=new HiveContext(spark.sparkContext)

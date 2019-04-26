@@ -9,12 +9,12 @@ import org.apache.spark.sql.hive.HiveContext
   * #date  2019/4/8 21:39
   * @version 1.0
   */
-object SparkSql_010_RowNumberWindowFunction {
+object SparkSql_011_RowNumberWindowFunction {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder()
       .master("local")
-      .appName("SparkSql_010_RowNumberWindowFunction")
+      .appName("SparkSql_011_RowNumberWindowFunction")
       .getOrCreate()
 
     val hiveContext = new HiveContext(spark.sparkContext);

@@ -11,12 +11,12 @@ import org.apache.spark.sql.SparkSession
   * #date  2019/4/8 17:02
   * @version 1.0
   */
-object SparkSql_008_JDBCDataSource {
+object SparkSql_009_JDBCDataSource {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder()
       .master("local")
-      .appName("SparkSql_008_JDBCDataSource")
+      .appName("SparkSql_009_JDBCDataSource")
       .getOrCreate()
 
     // 读取JDBC 文件创建DataFrame 然后保存到HDFS

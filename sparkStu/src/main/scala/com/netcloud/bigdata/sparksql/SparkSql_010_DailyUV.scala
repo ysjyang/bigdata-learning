@@ -9,12 +9,12 @@ import org.apache.spark.sql.functions._
   * #date  2019/4/8 17:57
   * @version 1.0
   */
-object SparkSql_009_DailyUV {
+object SparkSql_010_DailyUV {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder()
       .master("local")
-      .appName("SparkSql_009_DailyUV")
+      .appName("SparkSql_010_DailyUV")
       .getOrCreate()
 
     // 要使用SparkSQL的内置函数，就必须导入SQLContext的隐式转换
