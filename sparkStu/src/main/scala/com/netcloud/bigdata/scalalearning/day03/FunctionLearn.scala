@@ -119,6 +119,7 @@ object FunctionLearn {
     println(add(1)(2))
 
     printString("hello","world!")
+    muiltfunction(1 to 5:_*) //使用序列调用变长函数
     defaultparam("ysj")
     defaultparam(age=25,sex="Man",name="ysj")
     face(5,5)//值函数
@@ -136,6 +137,14 @@ object FunctionLearn {
       i=i+1
     }
 
+  }
+
+  def muiltfunction(nums:Int*) ={
+    var sum=0
+    for(num <- nums){
+      sum=sum+num
+    }
+     println("sum= "+sum)
   }
 
   /**

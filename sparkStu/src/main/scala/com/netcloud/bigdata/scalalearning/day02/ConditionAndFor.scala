@@ -3,7 +3,7 @@ package com.netcloud.bigdata.scalalearning.day02
 /**
   * @author yangshaojun
   * @version 1.0
-  *          date 20181211
+  * date 20181211
   */
 /*
  * 2) Scala中的if可以作为表达式使用，表达式的返回值就是if或者else的最后一句，可以直接赋值给变量。
