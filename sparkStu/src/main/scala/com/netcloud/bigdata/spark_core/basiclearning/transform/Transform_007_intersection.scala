@@ -16,8 +16,9 @@ object Transform_007_intersection {
 
     val sc = new SparkContext(conf)
 
-    val rdd1=sc.textFile("data/basicdata/sample.txt")
-    val rdd2=sc.textFile("data/basicdata/union.txt")
+    sc.parallelize(Seq(1,3,5,6))
+    val rdd1=sc.parallelize(Seq(1,3,5,6))
+    val rdd2=sc.parallelize(Seq(2,3,5,7))
     val result=rdd1.intersection(rdd2)
     result.foreach(println)
 

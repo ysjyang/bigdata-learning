@@ -4,9 +4,12 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 /**
   * mapPartitions（）算子
-  * Note:与map算子类似，map是处理的每条数据，而mapPartitions是处理的每个分区的数据。
+  * Note:与map算子类似，map是一次处理一个分区中的一条数据，而mapPartitions是一次处理一个分区的数据。
   * 示例：如果在map过程中需要频繁创建额外的对象(例如将rdd中的数据通过jdbc写入数据库,map需要为每个元素创建一个链接而mapPartition为每个partition创建一个链接)
   *      则mapPartitions效率比map高的多。
+  * 什么情况下使用mappartition?
+  * 如果RDD 的数据量不是特别大的大，建议使用mappartition算子替代 map可以加快处理的速度。
+  * 如果数据量特别的大，比如10亿数据，不建议使用，可能内存溢出。
   * @author yangshaojun
   * #date  2019/3/1 23:03
   * @version 1.0
