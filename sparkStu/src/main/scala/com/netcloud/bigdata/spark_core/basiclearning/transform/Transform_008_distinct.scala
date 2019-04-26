@@ -16,10 +16,16 @@ object Transform_008_distinct {
     val conf = new SparkConf().setAppName("distinct").setMaster("local[2]")
 
     val sc = new SparkContext(conf)
+    val arr = Array("user1 2019-01-02 23:12:23",
+      "user1 2019-01-02 23:12:23",
+      "user1 2019-01-02 23:12:23",
+      "user2 2019-01-02 23:12:23",
+      "user1 2019-01-02 23:12:23",
+      "user3 2019-01-02 23:12:23",
+      "user2 2019-01-02 23:12:23")
 
-    val linerdds = sc.textFile("data/basicdata/distinct.txt")
-    val wordRDD=linerdds.flatMap(line => line.split(","))
-    val result = wordRDD.distinct()
+    val linerdds = sc.parallelize(arr,2)
+    val result = linerdds.distinct()
     result.foreach(println)
 
   }
