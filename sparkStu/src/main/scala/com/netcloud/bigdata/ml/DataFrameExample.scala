@@ -1,12 +1,10 @@
 import java.io.File
 
-import com.netcloud.bigdata.mllib.AbstractParams
 import org.apache.spark.ml.linalg.Vector
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.stat.MultivariateOnlineSummarizer
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import scopt.OptionParser
-import org.apache.spark.util.Utils
 
 
 /*
